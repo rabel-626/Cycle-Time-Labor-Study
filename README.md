@@ -1,4 +1,4 @@
-# MPG Cartoner Labor Study
+#Abel-Engineering Cartoner Labor Study
 
 A standalone, phone-first industrial engineering tool for measuring labor content, operator variation, line losses, replenishment demand, rework burden, and staffing requirements on machine-paced cartoner assembly lines.
 
@@ -27,7 +27,7 @@ Traditional stopwatch studies can capture individual cycle times, but they often
 - Which manual operations are the best candidates for future automation?
 - Can data from many studies, lines, products, observers, and devices be combined cleanly in Power BI?
 
-MPG Cartoner Labor Study is intended to preserve the raw observations needed to answer those questions instead of only storing final averages.
+Abel-Engineering Cartoner Labor Study is intended to preserve the raw observations needed to answer those questions instead of only storing final averages.
 
 ## Core Study Structure
 
@@ -480,7 +480,7 @@ The help interface is responsive and changes to a phone-friendly bottom-sheet la
 No build process or installation is currently required.
 
 ```text
-MPG_Cartoner_Labor_Study_v1.4.html
+Abel-Engineering_Cartoner_Labor_Study_v1.4.html
 ```
 
 Open the file directly in a current browser.
