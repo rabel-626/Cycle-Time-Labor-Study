@@ -1,339 +1,346 @@
-# Abel-Engineering Cycle Time & Labor Study
+# Abel Engineering Cycle Time & Labor Study
 
-A standalone, browser-based engineering tool for capturing cycle-time observations, modeling labor content, reviewing line balance and support workload, and exporting analysis-ready study data.
+Current application version: **1.44.0**  
+Current study/report schema version: **16**  
+Companion application: `17adfcf4-0039-4d60-91ea-04abcb69c0ab.html`
 
-The application is delivered as a **single HTML file** with inline CSS and JavaScript. It requires no build step, no server, and no network connection for normal use.
+## Purpose
 
-**Current runtime version:** `1.30.1`  
-**Study schema:** `13`  
-**Mapping schema:** `2`  
-**Process-template schema:** `5`
+The Abel Engineering Cycle Time & Labor Study is a standalone browser application for capturing and validating complete-line process timing, labor content, operator variation, production structure, recurring support work, replenishment demand, and line-loss events.
 
-> **Version note:** the JavaScript runtime constant reports `1.30.1`, while the visible HTML footer still says `v1.29`. The runtime constant is treated as authoritative in this README.
+The application is designed to support an industrial-engineering study from initial process definition through timing capture, data-quality review, labor and capacity analysis, and downstream reporting. It runs locally in a modern browser and does not require a server or network connection.
 
-## What the tool does
+## Current Branding
 
-The Cycle Time & Labor Study supports end-to-end field studies for paced production lines and shared support work. Its main capabilities include:
+The application uses the Abel Engineering visual identity:
 
-- Define the study, reference throughput, conveyor/pitch information, labor-planning basis, and production structure.
-- Configure process roles as **Paced / Repeating**, **Recurring / Support**, or **Reference Only**.
-- Define process relationships to the selected reference throughput unit, including multi-event and multi-unit relationships.
-- Configure recurring support tasks using consumption-based, reference-unit-based, or per-hour frequency models.
-- Capture direct timed samples by role, position, operator, task, and sample condition.
-- Capture sequenced standard work with ordered work elements for Yamazumi analysis.
-- Classify sequence elements as value-added work, work, motion, inspection, wait/idle, machine wait, or other, with independent labor inclusion.
-- Record optional line/station observation sessions and contextual events such as starved, blocked, quality hold, machine stop, refill, missed/late, and notes.
-- Measure conveyor/belt speed and compare measured speed with configured machine and belt relationships.
-- Review mean, standard deviation, P90, operator/position variation, process capacity, labor content, support FTE, and data-quality status.
-- Compare measured work with selected production pace, measured bottleneck rate, physical work windows, and recovery time.
-- Visualize sequenced work as a **Yamazumi / Standard Work Balance**.
-- Run a lightweight staffing/throughput scenario model.
-- Export full-fidelity study files, flattened analysis/report JSON, reusable process templates, and Excel timing-sample workbooks.
+- Embedded Abel Engineering logo in the application header
+- Graphite-black interface with white/silver text
+- Electric-violet primary accents derived from the logo
+- Responsive desktop and mobile header treatment
+- Semantic warning, success, and exception colors retained for operational clarity
 
-## Quick start
+The September 2, 2026 branding update was visual only. Calculation logic, element IDs, event wiring, data structures, browser storage behavior, and import/export behavior were not changed.
 
-1. Open the HTML file in a modern browser.
-2. Go to **Setup** and enter the study identity, reference throughput/machine pace, and labor-planning assumptions.
-3. Define the process roles/stations and any recurring support tasks.
-4. Go to **Capture**, select the role, position, operator, and work element/task, then collect timing samples.
-5. Use **Review** to validate sample coverage, inspect timing distributions, check process pace/recovery, review events, and inspect labor balance.
-6. Use **Data / Export** to download a Study JSON for continuation/audit, a Report JSON for downstream analysis, or an Excel workbook of timing samples.
+## Main Workflow
 
-For repeat studies on the same line, use **Start New Study — Keep Line Setup** to preserve the process configuration while clearing the previous run's observations.
+The application is organized into five primary tabs.
 
-## Main navigation
+### 1. Overview
 
-| Tab | Purpose |
-| --- | --- |
-| **Overview** | High-level study snapshot, current vs. design labor, area labor summary, quick visuals, Yamazumi access, and next-step indicators. |
-| **Setup** | Study identity, throughput/machine pace, labor basis, process roles, support tasks, sequenced standard work, and reusable process templates. |
-| **Capture** | Primary field-collection workflow for direct samples, sequenced samples, event context, observation sessions, and recent-sample review. |
-| **Review** | Data quality, area/role timing, process capacity, sample review/exclusion, events, operators, process pace, Yamazumi, work-window recovery, and support workload. |
-| **Data / Export** | Study lifecycle controls, autosave recovery, Study JSON, Report JSON, timing-sample Excel export, and advanced identity/file-naming information. |
+Provides a high-level study snapshot and access to the main analysis views, including:
 
-## Process model
+- Study identity and readiness status
+- Labor-model summary
+- Yamazumi and standard-work balance
+- Process pace and throughput comparison
+- Replenishment summary
+- Quick scenario modeling
+- Optional flow and line-loss context
 
-### Paced / Repeating roles
+### 2. Setup
 
-Use for work that repeats in relation to the selected reference throughput unit. Each role can define:
+Defines the study and the process structure before timing begins.
 
-- Area
-- Current positions/workers
-- Process events per reference unit, or reference units per process event
-- Optional worker fraction per position
-- Optional work-zone length
-- Optional reporting/material details
-- Optional sequenced standard-work definition
+Key setup capabilities include:
 
-Measured role timing feeds routine labor, position-level load, process capacity, design staffing, pace comparison, and work-window diagnostics.
+- Study name, date, observer, plant, line, job/SKU, shift, equipment, and reference object
+- Primary observed output rate
+- Two-phase machine-rate measurement using up to 10 saved samples
+- Placement-opportunity-window measurement with reference-units-per-window and optional K factor
+- Secondary conveyor/belt rate measurement and VFD context
+- Labor planning basis and design efficiency
+- Areas, process roles, current positions, and worker fractions
+- Work models for paced/repeating work, recurring/support work, and reference-only items
+- Process-event relationships to the selected reference unit
+- Material/component quantity per process event
+- Refill quantity and pieces per supply skid
+- Optional standard-work sequences for paced roles
+- Recurring/auxiliary task definitions and task-level sequences
+- Operator aliases and position assignment
+- Role display-order controls and a visible Role → Task → Element hierarchy
 
-### Recurring / Support roles
+### 3. Capture
 
-Use for intermittent/shared work such as replenishment, staging, pallet movement, cleanup, paperwork, or other tasks that do not occur as a simple repeated cycle at every production unit.
+Captures observations against the configured process structure.
 
-Support tasks can use one of three recurrence models:
+Supported capture modes include:
 
-- **Consumption-derived:** consumption per reference unit divided by quantity per service/refill.
-- **Reference-unit relationship:** task events per reference unit or reference units per task event.
-- **Events per hour:** direct recurrence rate for time-based or irregular support work.
+- Standard single-sample timing
+- One-tap sequential standard-work timing
+- Continuous sequence capture
+- One-cycle sequence capture
+- Paced-role timing
+- Recurring/support-task timing
+- Operator and position assignment
+- Sample-condition classification
+- Line-level and station-level observation sessions
+- Quick flow-event logging for conditions such as starved, blocked, quality, rework, machine stop, and waiting
+- Duration events and instantaneous events
+- Safe cancellation of an active capture or sequence
+- Recent-sample review during collection
 
-The tool combines measured task duration with modeled recurrence to calculate support labor seconds/hour, labor seconds/reference unit, and design FTE.
+Sequential capture records the parent elapsed cycle and the individual work-element durations. Wait/idle and non-labor classifications can remain part of elapsed time without automatically becoming labor content.
 
-### Reference Only roles
+### 4. Review
 
-Use for process/context definitions that should be retained without contributing as routine paced or support labor.
+Provides detailed analysis and validation before export.
 
-## Timed capture
+Review functions include:
 
-The primary timed-sample workflow stores context with each completed sample, including the process role, position, operator identity/alias, timed element or support task, sample condition, and elapsed seconds.
+- Role timing summary
+- Operator and position comparison
+- Process-capacity review
+- Process time versus takt/reference pace
+- Labor and elapsed-time Yamazumi views
+- Work-element stacks and sequence reconciliation
+- Shared support workload
+- Recurring-task burden normalized to the reference unit
+- Area-level labor summaries
+- Replenishment modeling
+- Flow/rework event review
+- Data-readiness and integrity signals
+- Timing outlier review
+- Archive, exclusion, reclassification, and reviewer-note controls
 
-For normal direct timing, tap **Start Timed Sample**, then complete the sample when the observed action ends.
+### 5. Data / Export
 
-### Sequenced standard-work capture
+Contains the files and utilities used to save, resume, reuse, and analyze studies.
 
-Paced roles can optionally define an ordered sequence of observable work elements. During sequence capture:
+Available outputs include:
 
-- One tap ends the current element and starts the next from the same boundary timestamp.
-- Capture can run as **Continuous Cycles** or **Single Cycle**.
-- Sequence revisions are retained with the sample context.
-- Wait/idle or machine-wait elements can be recorded as elapsed time without necessarily adding to labor seconds.
-- Parent samples retain total elapsed, labor time, wait/idle time, and the per-element breakdown.
-- The same sequence data feeds the Yamazumi / Standard Work Balance views and the Work Element Excel export.
+- Full-fidelity Study JSON
+- Flattened Analysis Report JSON for Power BI and downstream tools
+- Timing Samples Excel export
+- Process Template JSON
+- Dropdown Mapping JSON
+- Copy-to-clipboard options for supported JSON packages
 
-The sequence runner can request the browser Screen Wake Lock API when supported so the display is less likely to sleep during active capture.
+## Process and Labor Model
 
-## Observation and event context
+### Reference-unit normalization
 
-Cycle-time samples work independently from the optional observation-session timer.
+A paced role can be defined in either direction:
 
-The optional observation layer can record broader line/station context, including:
+- Process events per reference unit
+- Reference units per process event
 
-- Starved
-- Blocked
-- Quality hold
-- Machine stop
-- Refill
-- Missed / late
-- Notes
+The application normalizes both entry methods to process events per reference unit for labor, capacity, material, and reporting calculations.
 
-These records support line-loss context, rework/flow review, replenishment review, and downstream reporting without replacing direct cycle-time sampling.
+### Component consumption
 
-## Engineering review and calculations
+Physical material use is intentionally separated from timing frequency:
 
-The application calculates and displays, where enough inputs/data are available:
+`components/reference unit = process events/reference unit × components/process event`
 
-- Reference throughput and reference-unit interval
-- Mean, standard deviation, and P90 timing
-- Paced labor seconds per reference unit
-- Support labor seconds per reference unit and per hour
-- Current configured crew and crew load
-- Theoretical minimum workers
-- Design minimum workers using the configured design efficiency
-- Role-constrained design positions
-- Measured bottleneck throughput
-- Remaining/over-pace time by process role
-- Physical work-window and recovery reserve
-- Shared-support workload and design FTE
-- Area/segment labor summaries
-- Operator and position timing comparisons
-- Replenishment/service-frequency estimates
-- Aggregate scenario staffing sensitivity
+This allows one observed placement cycle to represent multiple components without incorrectly multiplying the measured cycle time.
 
-A central relationship used throughout the tool is:
+### Paced labor
 
-```text
-Reference interval (sec / reference unit) = 60 / reference throughput per minute
-```
+Routine paced labor is based on the role timing result and its normalized event frequency. At a high level:
 
-Routine paced labor is based on measured role time normalized by the process relationship to the reference unit. Support labor combines measured support-task duration with its recurrence model.
+`paced labor/reference unit = role mean seconds × process events/reference unit`
 
-## Data-quality and readiness checks
+Role positions, worker fractions, reference pace, and design efficiency are then used in load and staffing calculations.
 
-The Review workflow includes heuristic quality checks before a study is treated as a baseline. Examples include:
+### Recurring and support labor
 
-- Missing reference/machine pace
-- No active process roles
-- Paced roles with no usable samples
-- Support pools/tasks without complete timing or recurrence inputs
-- Low sample counts
-- Multi-position roles with limited operator coverage
-- Active duration events that have not been closed
-- Excluded samples/events/speed checks
+Recurring tasks can belong to either a paced operator or a shared support labor pool. Supported frequency models include:
 
-Current heuristic warning thresholds in the source are:
+- Consumption-driven frequency
+- Task events per reference unit or reference units per task event
+- Configured events per hour
 
-- **Paced / repeating role:** fewer than **15 normal samples**
-- **Included support task:** fewer than **8 normal samples**
+The resulting burden is normalized into labor seconds per hour, labor seconds per reference unit, and design FTE where applicable.
 
-These are application readiness heuristics, not a substitute for engineering judgment or a formal sampling standard.
+## Timing Statistics
 
-## Data persistence and recovery
+The study calculates and exports statistics such as:
 
-The tool stores its working study in browser `localStorage`.
+- Sample count
+- Mean
+- Median
+- Standard deviation
+- Coefficient of variation
+- P90
+- Operator-weighted mean
+- Between-operator variation
+- Parent labor mean and parent elapsed mean for sequenced work
+- Complete, eligible, and incomplete sequence-cycle counts
 
-Primary storage keys:
+The selected timing basis can be carried into downstream capacity and material planning.
 
-```text
-Abel-Engineering_CARTONER_STUDY_V1
-Abel-Engineering_CARTONER_STUDY_V1_BACKUP
-Abel-Engineering_CARTONER_RUNTIME_RECOVERY_V1
-Abel-Engineering_CARTONER_DEVICE_ID
-```
+## Timing Outlier Review
 
-Behavior includes:
+The outlier system is intended to find likely missed clicks and other capture anomalies without silently deleting legitimate observations.
 
-- Autosave after study changes and capture actions.
-- A secondary local backup for smaller study payloads.
-- Runtime-recovery metadata for interrupted active sessions/capture states.
-- Page-exit persistence for the current study state.
-- A visible warning if local persistence fails.
-- Capture locking after an autosave failure to reduce the chance of silent data loss.
+### Comparison groups
 
-**Browser storage should not be treated as the only backup.** Download Study JSON regularly during field work, especially before clearing browser data, changing devices, or importing another study.
+Samples are compared only against compatible observations from the same timing group. The baseline uses included, normal-condition, complete observations with positive durations.
 
-## Study lifecycle
+Sequential samples are checked at both levels:
 
-### Start New Study — Keep Line Setup
+- Parent elapsed cycle
+- Individual work elements
 
-Creates a new Study ID and preserves the reusable line configuration, including roles/positions, areas, support-task definitions, machine/pitch setup, design efficiency, plant/line/equipment, and observer defaults.
+### Minimum sample count
 
-It clears run-specific data such as operators, timing samples, flow events, observation sessions, belt-speed trials, job/run identity, total headcount, notes, and the report sequence. The next report starts again at `R001`.
+At least five compatible observations are required before a sample can be flagged.
 
-### Full Reset
+### Robust comparison method
 
-Clears the entire tool back to a blank study, including reusable line/process setup.
+The application compares each duration with the group median and also calculates a robust score using the median absolute deviation of log-transformed durations.
 
-## Imports and exports
+Current thresholds are:
 
-| Format | Purpose | Includes observations? |
+| Baseline size | Severity | Trigger |
 | --- | --- | --- |
-| **Study JSON** | Full-fidelity save/resume and audit file. | Yes |
-| **Report JSON** | Flattened analysis package for Power BI/downstream labor, timing, pace, quality, and planning workflows. | Yes, flattened for analysis |
-| **Timing Samples XLSX** | Human-friendly Excel export of parent timing samples and sequenced work-element samples. | Timing samples only |
-| **Process Template JSON** | Reusable Areas, Roles/Stations, and Support Tasks. Imports merge by stable Role/Task ID. | No |
-| **Mapping JSON** | Legacy/advanced controlled-dropdown vocabulary retained in the source for compatibility. The normal workflow no longer exposes this as a primary tab. | No |
+| 5–9 samples | Extreme | At least 3× the median or no more than 1/3 of the median |
+| 10+ samples | Extreme | At least 3× the median or no more than 1/3 of the median |
+| 10+ samples | Strong | At least 2×, no more than 1/2, or robust score ≥ 6 with an additional ratio guard |
+| 10+ samples | Watch | At least 1.5×, no more than 2/3, or robust score ≥ 3.5 with an additional ratio guard |
 
-### Excel timing export
+Flags are review prompts, not automatic exclusions. A reviewer can:
 
-The generated `.xlsx` workbook contains two sheets:
+- Keep the sample as a valid observation
+- Reclassify its condition
+- Exclude it as a capture error
+- Exclude it for another documented reason
+- Reset the review decision
 
-1. **Timing Samples** — parent sample records and study/process context.
-2. **Work Element Samples** — element-level rows for sequenced samples.
+This preserves the raw observation and creates an auditable review trail.
 
-The workbook is generated directly in the browser; no external spreadsheet library is loaded.
+## Yamazumi and Sequence Reconciliation
 
-### Report JSON structure
+Standard-work sequences support task-level Yamazumi stacks rather than a single aggregate bar. The application distinguishes:
 
-The analysis report currently exports arrays including:
+- Labor balance
+- Elapsed cycle composition
+- Wait/idle content
+- Non-labor content
+- Recurring auxiliary work
+- Complete versus incomplete sequence cycles
+- Parent-cycle versus element-stack reconciliation
 
-- `Study`
-- `Stations`
-- `Operators`
-- `ObservationSessions`
-- `StationObservationSessions`
-- `LegacyObservationSessions`
-- `BeltSpeedChecks`
-- `PlacementSamples`
-- `WorkElementSamples`
-- `WorkElementSummary`
-- `SequenceDefinitions`
-- `FlowEvents`
-- `SupportTasks`
-- `SegmentSummary`
-- `ProcessPaceSummary`
-- `RoleTimingSummary`
-- `OperatorTimingSummary`
-- `DataQuality`
-- `ScenarioSummary`
-- `ExportManifest`
+The parent sample remains authoritative. Element totals are reconciled against complete cycles from the current sequence revision so incomplete or obsolete sequence definitions are not silently mixed into the analysis.
 
-The report schema is `Abel-Engineering.CartonerPowerBIReport`.
+## Data Files and Schemas
 
-### File naming
+### Study JSON
 
-Study and Report JSON downloads use a database-friendly naming convention:
+- Schema: `Abel-Engineering.CartonerStudy`
+- Schema version: `16`
+- Purpose: full-fidelity save/resume and audit file
+- Contains setup, roles, tasks, operators, samples, events, sessions, rate checks, review decisions, and migration history
 
-```text
-DATE__PLANT__LINE__JOB__SHIFT__STUDYID__R###__EXPORTUTC__TYPE.json
-```
+### Analysis Report JSON
 
-Study-state exports use `R000`. Report exports increment `R001`, `R002`, and so on within the current study.
+- Schema: `Abel-Engineering.CartonerPowerBIReport`
+- Schema version: `16`
+- Purpose: flattened analysis package for Power BI, multi-study analysis, and the Material Flow & Takt Planner
 
-## Architecture
+Major report arrays include Study, Stations, Operators, ObservationSessions, StationObservationSessions, BeltSpeedChecks, OpportunityWindowChecks, MachineRateChecks, PlacementSamples, WorkElementSamples, SequenceDefinitions, FlowEvents, SupportTasks, SegmentSummary, ProcessPaceSummary, RoleTimingSummary, OperatorTimingSummary, SequenceReconciliation, DataQuality, DataAccuracy, ScenarioSummary, and ExportManifest.
 
-This is intentionally a compact single-file application:
+### Process Template JSON
 
-```text
-<single HTML file>
-├── inline CSS
-├── application markup
-└── inline JavaScript
-    ├── state and schema migration
-    ├── localStorage persistence/recovery
-    ├── capture timers and sequence runner
-    ├── labor/capacity calculations
-    ├── review visualizations
-    └── JSON/XLSX export generation
-```
+- Schema: `Abel-Engineering.CycleTimeLaborRoleStations`
+- Schema version: `5`
+- Purpose: reuse areas, roles/stations, support tasks, and their configured standard-work structures without carrying timing observations
 
-There are no external script, stylesheet, package-manager, or build dependencies in the supplied HTML.
+Process Template import merges definitions by stable Role/Task ID. Matching definitions are updated, new definitions are added, and definitions absent from the imported file are retained. Samples, events, operators, and observation history are not replaced.
 
-### Browser APIs used
+### Dropdown Mapping JSON
 
-The implementation uses standard browser capabilities such as:
+- Schema: `Abel-Engineering.CartonerMapping`
+- Schema version: `2`
+- Purpose: reuse dropdown standards without replacing the active study or process data
 
-- `localStorage`
-- `performance.now()` / `requestAnimationFrame()` for timers
-- `Blob` and object URLs for downloads
-- Clipboard API with a DOM-copy fallback
-- `crypto.randomUUID()` when available, with a generated-ID fallback
-- Screen Wake Lock for sequenced capture when supported
+## File Naming Convention
 
-## Privacy and network behavior
+Study and report downloads use the database-friendly convention:
 
-Normal operation is local to the browser. The supplied file has no external scripts/styles and describes itself as requiring no network connection.
+`DATE__PLANT__LINE__JOB__SHIFT__STUDYID__R###__EXPORTUTC__TYPE.json`
 
-Study content remains in browser storage unless the user explicitly downloads, imports, or copies data. There is no built-in backend, account sync, cloud database, or multi-user collaboration layer in this HTML.
+- Study-state files use `R000`.
+- Report exports increment `R001`, `R002`, and so on within the study.
+- Starting a new study resets the next report number to `R001`.
 
-## Responsive / field use
+## Local Storage and Recovery
 
-The UI includes responsive layouts for tablet/phone widths, large touch-oriented capture controls, horizontal scrolling for dense review tables, mobile sequence-capture layouts, safe-area handling, and a print stylesheet focused on the dashboard/review output.
+The application stores working data in the browser using local storage.
 
-## Known limitations and interpretation notes
+Primary storage keys include:
 
-- `localStorage` is device/browser-specific and can be cleared by browser settings or storage policies; use Study JSON for durable transfer/backup.
-- An in-progress timed action is not a completed sample. Study export metadata can identify a live snapshot and whether active work/sequence capture was omitted.
-- Data-quality thresholds are heuristics and do not certify staffing changes by themselves.
-- Work-window/recovery analysis is a physical-feasibility diagnostic and does not replace ergonomic, safety, walking, or overlap observation.
-- The quick scenario model is an aggregate sensitivity model; it is not a task-specific simulation of every process change.
-- Mapping support remains in the code for compatibility, but the current normal workflow centers on Process Templates rather than the hidden Mapping section.
-- There is no server-side persistence, authentication, permissions model, or collaborative editing.
-- The visible footer version (`v1.29`) should be updated to match the runtime `APP_VERSION` (`1.30.1`).
+- `Abel-Engineering_CARTONER_STUDY_V1`
+- `Abel-Engineering_CARTONER_STUDY_V1_BACKUP`
+- `Abel-Engineering_CARTONER_RUNTIME_RECOVERY_V1`
+- `Abel-Engineering_CARTONER_DEVICE_ID`
 
-## Maintainer notes
+The application maintains a primary autosave, a rolling backup when practical, and runtime-recovery information for interrupted observation timers. If autosave fails, capture is locked to prevent silent data loss and the operator is directed to export the Study JSON.
 
-When changing the data model or export contracts:
+Browser local storage is not a substitute for a controlled study file. Clearing browser data, changing browsers, changing browser profiles, or opening the file under a different origin can make an existing autosave unavailable.
 
-1. Update `APP_VERSION` and, when required, `SCHEMA_VERSION`.
-2. Add/adjust migration handling so older Study JSON files remain loadable.
-3. Verify Study JSON round-trip import/export.
-4. Verify Process Template merge behavior does not replace observations.
-5. Verify Report JSON retains expected legacy arrays/field names used downstream.
-6. Verify both Excel sheets open correctly and retain the intended parent/element relationship.
-7. Test autosave failure/recovery paths and page-exit behavior.
-8. Test both desktop and narrow mobile layouts, especially sequenced capture.
-9. Update visible version text in the footer when the runtime version changes.
+## Recommended Operating Procedure
 
-## Source file
+1. Open the HTML file in a current desktop or mobile browser with JavaScript enabled.
+2. Complete Study Identity and Reference Pace setup.
+3. Define areas, roles, support pools, recurring tasks, and optional sequences.
+4. Verify the Role → Task → Element hierarchy before collection.
+5. Record operator aliases and position assignments.
+6. Capture normal cycles first, then deliberately classify abnormal conditions and events.
+7. Review incomplete sequences, outliers, exclusions, and readiness warnings.
+8. Download the full Study JSON as the authoritative continuation file.
+9. Download the Analysis Report JSON for Power BI or Material Flow & Takt planning.
+10. Retain exported files in a controlled study folder with the generated filenames unchanged.
 
-This README was prepared from the supplied standalone HTML application:
+## Backup and Data-Safety Guidance
 
-```text
-b484000d-5fc9-4c97-9c6b-d3ef21654ba5.html
-```
+- Export Study JSON at the beginning and end of each major collection session.
+- Export again before clearing browser storage, switching devices, or replacing the HTML application.
+- Do not treat Report JSON as a substitute for Study JSON; the report is flattened for analysis and is not the authoritative continuation file.
+- Review every automated outlier flag before exclusion.
+- Preserve exclusion reasons and reviewer notes for auditability.
+- Confirm reference-unit relationships and component quantities before relying on staffing or material calculations.
 
-For a repository, consider renaming the application file to something descriptive such as `cycle-time-labor-study.html` and placing this file beside it as `README.md`.
+## Browser Requirements
 
-## License
+- Current Chromium-based browser, Firefox, or Safari
+- JavaScript enabled
+- Local storage enabled
+- File-download permission for JSON/Excel exports
+- Pop-up/print permission when using browser print functions
 
-No license information is declared in the supplied HTML. Add the appropriate project/license terms before distributing the application outside its intended environment.
+No installation, web server, database connection, or internet connection is required for normal operation.
+
+## Functional Boundaries
+
+- Results are only as reliable as the process structure, reference-rate assumptions, sample classification, and observation quality entered by the user.
+- Outlier detection identifies statistically unusual observations; it does not determine whether an observation is operationally invalid.
+- Staffing and capacity outputs are engineering planning estimates and should be checked against safety, ergonomics, equipment limits, material availability, and actual production trials.
+- Local browser storage is device/profile specific and should not be treated as the only record of a completed study.
+
+## Current Change Summary
+
+### September 2, 2026 — Abel Engineering visual refresh
+
+- Added the supplied Abel Engineering logo to the application header.
+- Embedded a compact logo asset directly in the HTML for standalone use.
+- Replaced the prior multicolor primary interface accents with a black, silver/white, and violet brand system.
+- Updated active tabs, panels, inputs, information controls, gradients, and footer branding.
+- Preserved semantic status colors for warnings, valid states, and exceptions.
+- Made no changes to functional JavaScript, calculations, IDs, event handlers, schemas, or stored data.
+
+### Functional baseline represented by this README
+
+- Application version 1.44.0
+- Study/report schema 16
+- Mapping schema 2
+- Process Template schema 5
+- Role → Task → Element hierarchy
+- Recurring-task and component-consumption modeling
+- Sequential standard-work capture and Yamazumi reconciliation
+- Two-phase machine-rate measurement
+- Placement-opportunity and belt-rate verification
+- Timing outlier review with auditable decisions
+- Power BI, Excel, Process Template, Mapping, and Study exports
+
