@@ -1,0 +1,89 @@
+{
+  "schema": "AbelEngineering.ToolManifest",
+  "schemaVersion": "1.0",
+  "tool": {
+    "id": "cycle-time-labor-study",
+    "name": "Cycle Time & Labor Study",
+    "shortName": "CTL",
+    "category": "Industrial Engineering",
+    "status": "Active",
+    "version": "Current testbench build",
+    "description": "Capture process timing and labor content, define role/task/element hierarchy, review timing quality and outliers, and evaluate standard work and Yamazumi balance.",
+    "tags": [
+      "Time Study",
+      "Labor",
+      "Cycle Time"
+    ],
+    "features": [
+      "Role \u2192 task \u2192 element hierarchy",
+      "One-shot and sequential timing capture",
+      "Timing sample review and outlier analysis",
+      "Process pace / takt comparison",
+      "Yamazumi / standard work balance",
+      "Support workload and material-use context",
+      "Study and analysis exports"
+    ]
+  },
+  "links": {
+    "application": "https://rabel-626.github.io/Cycle-Time-Labor-Study/",
+    "repository": "https://github.com/rabel-626/Cycle-Time-Labor-Study"
+  },
+  "documents": [
+    {
+      "id": "quick-start",
+      "type": "quick-start",
+      "title": "Quick Start",
+      "file": "docs/quick-start/QS-AE-CTL-001_Quick-Start.md",
+      "description": "Fast workflow from study setup through capture, review, analysis, and export.",
+      "order": 10
+    },
+    {
+      "id": "work-instructions",
+      "type": "work-instruction",
+      "title": "Work Instructions",
+      "file": "docs/work-instructions/WI-AE-CTL-001_Study-Procedure.md",
+      "description": "Detailed operating procedure for conducting a cycle-time and labor study.",
+      "order": 20
+    },
+    {
+      "id": "timing-method",
+      "type": "reference",
+      "title": "Cycle-Time Methodology",
+      "file": "docs/reference/REF-AE-CTL-001_Cycle-Time-Methodology.md",
+      "description": "Reference for sampling, timing basis, process relationships, and capacity interpretation.",
+      "order": 30
+    },
+    {
+      "id": "yamazumi",
+      "type": "reference",
+      "title": "Yamazumi Analysis",
+      "file": "docs/reference/REF-AE-CTL-002_Yamazumi-Analysis.md",
+      "description": "Guide to standard-work balance and role workload visualization.",
+      "order": 40
+    },
+    {
+      "id": "outliers",
+      "type": "reference",
+      "title": "Outlier Review",
+      "file": "docs/reference/REF-AE-CTL-003_Outlier-Review.md",
+      "description": "Guide to reviewing unusual timing samples without blindly deleting valid variation.",
+      "order": 50
+    },
+    {
+      "id": "limitations",
+      "type": "limitations",
+      "title": "Limitations",
+      "file": "docs/limitations/LIM-AE-CTL-001_Limitations.md",
+      "description": "Known use boundaries and engineering-review requirements.",
+      "order": 60
+    },
+    {
+      "id": "data",
+      "type": "data",
+      "title": "Data & Privacy",
+      "file": "docs/data/DATA-AE-CTL-001_Data-Handling.md",
+      "description": "Local storage, study files, reports, and traceability guidance.",
+      "order": 70
+    }
+  ]
+}
